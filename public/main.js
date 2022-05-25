@@ -2,27 +2,26 @@ const socket = io();
 
 const button = document.getElementById('button')
 button.addEventListener("click", () => {
-    socket.emit("newProduct")
+    socket.emit("newProduct");
 })
 
 let tableContainer = document.getElementById('tableContainer')
+let tableBody = document.getElementById("tbody")
 
 socket.on('productosEnviados', productos =>{
     if(productos.length>0){
-        tableBody = document.getElementById("tbody")
-        productos.forEach(product => {
-            const tr = document.createElement("tr")
-            tr.innerHTML = `<td> ${product.title} </td>
-                            <td> ${product.price} </td>
-                            <td>
-                                <img src="${product.thumbnail}" alt="${producto.title}" class="imgProd"> <!--El src lo va a ir a buscar a public porque alli declare que estan mis archivos estaticos-->
-                            </td>`
-            tableBody.appendChild(tr)
-        });                    
+        tableBody.innerHTML = productos.map(product => {
+            return(`<tr>
+                    <td> ${product.title} </td>
+                    <td> ${product.price} </td>
+                    <td>
+                        <img src="${product.thumbnail}" alt="${product.title}" class="imgProd"> <!--El src lo va a ir a buscar a public porque alli declare que estan mis archivos estaticos-->
+                    </td>
+                    </tr>`)
+        }).join('');               
     }
     else{
-        tableContainer.setAttribute("style", "display:none;")
-        divProducts.innerHTML = `<p>There are no products</p>`
+        tableContainer.innerHTML = `<p>There are no products</p>`
     }
 })
 
@@ -51,13 +50,11 @@ const messagesContainer = document.getElementById("messagesContainer")
 socket.on('mensajesEnviados', mensajes =>{
     messagesContainer.classList.add("mensajesContainerStyles")
     if(mensajes.length>0){
-        const div = document.createElement('div')
-        mensajes.forEach(mensaje => {
-            div.innerHTML = `<p><span class="mail">${mensaje.email} </span>
-                            <span class="fecha">[${mensaje.fecha}]: </span>
-                            <span class="msj">${mensaje.message}</span></p>`
-        messagesContainer.appendChild(div)
-        });
+        messagesContainer.innerHTML = mensajes.map(mensaje => {
+            return(`<p><span class="mail">${mensaje.email} </span>
+                <span class="fecha">[${mensaje.fecha}]: </span>
+                <span class="msj">${mensaje.message}</span></p>`)
+        }).join(' ');
     }
     else{
         messagesContainer.innerHTML = ''

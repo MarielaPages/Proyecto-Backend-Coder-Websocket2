@@ -55,11 +55,11 @@ let productos = []
 async function devolverMensajes(){
   messages = await mensajesLlegados.getAll()
   console.log(messages)
-  io.sockets.emit('messages', messages)
+  io.sockets.emit('mensajesEnviados', messages)
 }
-async function devolverProductos(){
+function devolverProductos(){
   productos = archivoNuevo.getAll()
-  io.sockets.emit('productos', productos)
+  io.sockets.emit('productosEnviados', productos)
 }
 //Levanto el servidor io
 io.on('connection', socket => {
@@ -67,8 +67,8 @@ io.on('connection', socket => {
   devolverProductos()
   socket.on('newProduct', () =>{
     productos = archivoNuevo.getAll()
-    console.log(productos)
-    io.sockets.emit('productosEnviados', productos)
+    console.log(productos);
+    io.sockets.emit('productosEnviados', productos);
   })
 
   devolverMensajes()
