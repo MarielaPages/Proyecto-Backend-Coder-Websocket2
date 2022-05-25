@@ -9,7 +9,9 @@ let tableContainer = document.getElementById('tableContainer')
 let tableBody = document.getElementById("tbody")
 
 socket.on('productosEnviados', productos =>{
+    console.log(productos);
     if(productos.length>0){
+        console.log("if true")
         tableBody.innerHTML = productos.map(product => {
             return(`<tr>
                     <td> ${product.title} </td>

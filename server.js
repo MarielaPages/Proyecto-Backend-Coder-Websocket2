@@ -40,7 +40,7 @@ app.post('/', (request, response) => {
   const producto = request.body; // esto es el objeto que llega con los datos. Lo uso para pasarselo al save
   const imagen = request.file;
   producto.thumbnail = '/files/'+imagen.filename; // agrego esta propiedad al objeto
-  const productoAgregado = archivoNuevo.save(producto)
+  const productoAgregado = archivoNuevo.save(producto);
 })
 
 
@@ -75,7 +75,6 @@ io.on('connection', socket => {
   socket.on('newMessage', async data =>{
     await mensajesLlegados.save(data)
     messages = await mensajesLlegados.getAll()
-    console.log(messages)
     io.sockets.emit('mensajesEnviados', messages)
   })
 });
