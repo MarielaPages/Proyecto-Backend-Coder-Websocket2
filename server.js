@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const multer = require('multer')
+//const multer = require('multer')
 const {Server : ioServer} = require('socket.io')
 const http = require('http')
 const Contenedor = require("./contenedor")
@@ -15,17 +15,17 @@ const httpServer = http.createServer(app)
 const io = new ioServer(httpServer) 
 
 //Seteo donde se guardaran los files y con que nombres
-const storage = multer.diskStorage({
-  destination: function(req, file, cb){
-    cb(null, __dirname+"/public/files")
-  },
-  filename: function(req, file, cb){
-    cb(null, file.originalname)
-  }
-})
+//const storage = multer.diskStorage({
+//  destination: function(req, file, cb){
+//    cb(null, __dirname+"/public/files")
+//  },
+//  filename: function(req, file, cb){
+//    cb(null, file.originalname)
+//  }
+//})
 
 //middlewares
-app.use(multer({storage}).single("thumbnail"))
+//app.use(multer({storage}).single("thumbnail"))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname+"/public"));
@@ -36,12 +36,12 @@ app.get("/", (req, resp) => {
   resp.render('pages/index', {productos: productos}) // lo busca en views
 })
 
-app.post('/', (request, response) => {
-  const producto = request.body; // esto es el objeto que llega con los datos. Lo uso para pasarselo al save
-  const imagen = request.file;
-  producto.thumbnail = '/files/'+imagen.filename; // agrego esta propiedad al objeto
-  const productoAgregado = archivoNuevo.save(producto);
-})
+// app.post('/', (request, response) => {
+//   const producto = request.body; // esto es el objeto que llega con los datos. Lo uso para pasarselo al save
+//   const imagen = request.file;
+//   producto.thumbnail = '/files/'+imagen.filename; // agrego esta propiedad al objeto
+//   const productoAgregado = archivoNuevo.save(producto);
+// })
 
 
 //Le digo donde van a estar mis templates y prendo el motor
@@ -54,20 +54,16 @@ let productos = []
 
 async function devolverMensajes(){
   messages = await mensajesLlegados.getAll()
-  console.log(messages)
   io.sockets.emit('mensajesEnviados', messages)
-}
-function devolverProductos(){
-  productos = archivoNuevo.getAll()
-  io.sockets.emit('productosEnviados', productos)
 }
 //Levanto el servidor io
 io.on('connection', socket => {
   console.log("cliente conectado")
-  devolverProductos()
-  socket.on('newProduct', () =>{
+  
+  io.sockets.emit('productosEnviados', productos)
+  socket.on('newProduct', (product) =>{
+    archivoNuevo.save(product);
     productos = archivoNuevo.getAll()
-    console.log(productos);
     io.sockets.emit('productosEnviados', productos);
   })
 

@@ -1,8 +1,14 @@
 const socket = io();
 
-const button = document.getElementById('button')
-button.addEventListener("click", () => {
-    socket.emit("newProduct");
+const button = document.getElementById('button');
+const title = document.getElementById('title');
+const price = document.getElementById('price')
+const thumbnail = document.getElementById('thumbnail')
+
+button.addEventListener("click", (e) => {
+    e.preventDefault();
+    const newProduct = {title: title.value, price: price.value, thumbnail: thumbnail.value}
+    socket.emit("newProduct", newProduct);
 })
 
 let tableContainer = document.getElementById('tableContainer')
@@ -23,7 +29,7 @@ socket.on('productosEnviados', productos =>{
         }).join('');               
     }
     else{
-        tableContainer.innerHTML = `<p>There are no products</p>`
+        tableContainer.innerHTML = `<p class="text-center">There are no products</p>`
     }
 })
 
