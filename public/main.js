@@ -26,7 +26,8 @@ socket.on('productosEnviados', productos =>{
                         <img src="${product.thumbnail}" alt="${product.title}" class="imgProd"> <!--El src lo va a ir a buscar a public porque alli declare que estan mis archivos estaticos-->
                     </td>
                     </tr>`)
-        }).join('');               
+        }).join('');
+        console.log(typeof(productos[0].price))               
     }
     else{
         tableContainer.innerHTML = `<p class="text-center">There are no products</p>`
@@ -39,7 +40,7 @@ const message = document.getElementById('message')
 
 button2.addEventListener("click", () => {
     const d = new Date();
-    const day = d.getDay()
+    const day = d.getDate()
     const month = d.getMonth() + 1
     const year = d.getFullYear()
     const hour = d.getHours()
